@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DevDocs — Ekip Dökümanları</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--bg2:#161B22;--bg3:#21262D;
+  --border:#30363D;--border2:#484F58;
+  --text:#E6EDF3;--muted:#8B949E;--dim:#6E7681;
+  --accent:#58A6FF;--accent-bg:#0C1E3A;
+  --green:#3FB950;--green-bg:#0D2E1A;
+  --orange:#FFA657;--orange-bg:#2D1700;
+  --red:#FF7B72;--red-bg:#2D0F0E;
+  --purple:#D2A8FF;--purple-bg:#1B0D2E;
+  --radius:8px;--radius-lg:12px;--radius-xl:16px;
+}
+html{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;display:flex;flex-direction:column}
+
+/* ── HEADER ── */
+header{
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.logo-row{display:flex;align-items:center;gap:10px}
+.logo-mark{width:28px;height:28px;background:linear-gradient(135deg,#6E40C9,#1F6FEB);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11px;color:#fff;flex-shrink:0}
+.logo-name{font-size:15px;font-weight:700;color:var(--text)}
+.logo-name span{color:var(--muted);font-weight:400}
+.header-meta{font-size:12px;color:var(--dim);font-family:'JetBrains Mono',monospace}
+
+/* ── HERO ── */
+.hero{padding:3rem 2rem 2rem;max-width:960px;margin:0 auto;width:100%}
+.hero h1{font-size:32px;font-weight:800;line-height:1.2;margin-bottom:.5rem}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:15px;color:var(--muted);margin-bottom:1.75rem;line-height:1.6;max-width:540px}
+
+/* ── SEARCH ── */
+.search-wrap{position:relative;max-width:480px;margin-bottom:2.5rem}
+.search-wrap input{
+  width:100%;background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:10px 16px 10px 40px;
+  font-size:14px;color:var(--text);font-family:'Syne',sans-serif;
+  outline:none;transition:border-color .2s;
+}
+.search-wrap input::placeholder{color:var(--dim)}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:15px;pointer-events:none}
+#search-results-count{font-size:12px;color:var(--dim);margin-top:6px;font-family:'JetBrains Mono',monospace;min-height:18px}
+
+/* ── STATS ROW ── */
+.stats-row{display:flex;gap:12px;margin-bottom:2.5rem;flex-wrap:wrap}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:.75rem 1.1rem;min-width:110px}
+.stat-num{font-size:22px;font-weight:700;color:var(--text);line-height:1}
+.stat-label{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* ── MAIN LAYOUT ── */
+.main{max-width:960px;margin:0 auto;width:100%;padding:0 2rem 4rem;flex:1}
+
+/* ── CATEGORY ── */
+.category{margin-bottom:2.5rem}
+.cat-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.cat-dot{width:8px;height:8px;border-radius:50%}
+.cat-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.cat-count{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--dim);background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:1px 8px}
+
+/* ── CARDS GRID ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.doc-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:1.1rem 1.2rem;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;gap:.6rem;
+  transition:border-color .18s,background .18s;position:relative;overflow:hidden;
+  cursor:pointer;
+}
+.doc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;opacity:0;transition:opacity .18s}
+.doc-card:hover{border-color:var(--border2);background:#1c2129}
+.doc-card:hover::before{opacity:1}
+.doc-card.cat-teknik::before{background:var(--accent)}
+.doc-card.cat-surec::before{background:var(--green)}
+.doc-card.cat-mimari::before{background:var(--purple)}
+.doc-card.cat-rehber::before{background:var(--orange)}
+
+.doc-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem}
+.doc-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.doc-status{font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:600;padding:2px 7px;border-radius:20px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.status-live{color:var(--green);background:var(--green-bg);border-color:#238636}
+.status-draft{color:var(--orange);background:var(--orange-bg);border-color:#BD561D}
+.status-wip{color:var(--dim);background:var(--bg3);border-color:var(--border)}
+
+.doc-title{font-size:14px;font-weight:700;color:var(--text);line-height:1.3}
+.doc-desc{font-size:12.5px;color:var(--muted);line-height:1.55;flex:1}
+.doc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.2rem}
+.doc-date{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--dim)}
+.doc-tags{display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-size:10px;font-family:'JetBrains Mono',monospace;padding:1px 7px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);color:var(--muted)}
+
+/* Placeholder card (coming soon) */
+.doc-card.placeholder{opacity:.45;pointer-events:none;border-style:dashed}
+.placeholder .doc-title{color:var(--muted)}
+
+/* ── EMPTY STATE ── */
+#empty-state{display:none;text-align:center;padding:3rem 1rem;color:var(--muted)}
+#empty-state .empty-icon{font-size:32px;margin-bottom:.75rem}
+#empty-state p{font-size:14px}
+
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;font-size:12px;color:var(--dim)}
+
+@media(max-width:600px){
+  header{padding:0 1rem}
+  .hero,.main{padding-left:1rem;padding-right:1rem}
+  .hero h1{font-size:24px}
+  .cards-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="logo-row">
+    <div class="logo-mark">dev</div>
+    <span class="logo-name">DevDocs <span>/ Ekip Dökümanları</span></span>
+  </div>
+  <span class="header-meta" id="last-updated"></span>
+</header>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <h1>Ekip <span>Dökümanları</span></h1>
+  <p>Teknik rehberler, süreç dökümanları ve mimari kararlar. Tüm ekibin başvuru noktası.</p>
+
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="search-input" placeholder="Döküman ara..." autocomplete="off"/>
+    <div id="search-results-count"></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="total-count">—</div>
+      <div class="stat-label">Toplam döküman</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="live-count">—</div>
+      <div class="stat-label">Yayında</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="draft-count">—</div>
+      <div class="stat-label">Taslak</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main class="main" id="main-content">
+
+  <!-- TEKNİK DÖKÜMANLAR -->
+  <div class="category" data-cat="teknik">
+    <div class="cat-header">
+      <span class="cat-dot" style="background:#58A6FF"></span>
+      <span class="cat-title">Teknik Dökümanlar</span>
+      <span class="cat-count" id="count-teknik">0</span>
+    </div>
+    <div class="cards-grid">
+
+      <a href="docs/git-flow.html" class="doc-card cat-teknik" data-tags="git gitlab cicd branch" data-title="Git Flow — Dal Yönetimi">
+        <div class="doc-card-head">
+          <span class="doc-icon">⎇</span>
+          <span class="doc-status status-live">Yayında</span>
+        </div>
+        <div class="doc-title">Git Flow — Dal Yönetimi</div>
+        <div class="doc-desc">GitLab CI/CD süreçlerinde feature, bugfix ve hotfix branch yönetimi. Naming convention, merge kuralları ve back-merge akışı.</div>
+        <div class="doc-footer">
+          <span class="doc-date">Nis 2025</span>
+          <div class="doc-tags">
+            <span class="tag">git</span>
+            <span class="tag">gitlab</span>
+            <span class="tag">ci/cd</span>
+          </div>
+        </div>
+      </a>
+
+      <div class="doc-card cat-teknik placeholder" data-tags="api rest dokumantasyon" data-title="API Dokümantasyon Standartları">
+        <div class="doc-card-head">
+          <span class="doc-icon">⬡</span>
+          <span class="doc-status status-wip">Yakında</span>
+        </div>
+        <div class="doc-title">API Dokümantasyon Standartları</div>
+        <div class="doc-desc">REST API endpoint naming, versioning ve dökümentasyon kuralları.</div>
+        <div class="doc-footer">
+          <span class="doc-date">—</span>
+          <div class="doc-tags"><span class="tag">api</span><span class="tag">rest</span></div>
+        </div>
+      </div>
+
+      <div class="doc-card cat-teknik placeholder" data-tags="code review standart" data-title="Code Review Rehberi">
+        <div class="doc-card-head">
+          <span class="doc-icon">◎</span>
+          <span class="doc-status status-wip">Yakında</span>
+        </div>
+        <div class="doc-title">Code Review Rehberi</div>
+        <div class="doc-desc">Etkili code review nasıl yapılır, nelere dikkat edilir, MR açıklamaları.</div>
+        <div class="doc-footer">
+          <span class="doc-date">—</span>
+          <div class="doc-tags"><span class="tag">review</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SÜREÇ DÖKÜMANLAR -->
+  <div class="category" data-cat="surec">
+    <div class="cat-header">
+      <span class="cat-dot" style="background:#3FB950"></span>
+      <span class="cat-title">Süreç Dökümanları</span>
+      <span class="cat-count" id="count-surec">0</span>
+    </div>
+    <div class="cards-grid">
+
+      <div class="doc-card cat-surec placeholder" data-tags="sprint planning scrum" data-title="Sprint Planlama Süreci">
+        <div class="doc-card-head">
+          <span class="doc-icon">◈</span>
+          <span class="doc-status status-wip">Yakında</span>
+        </div>
+        <div class="doc-title">Sprint Planlama Süreci</div>
+        <div class="doc-desc">Sprint başlangıcında yapılan planlama toplantısı adımları ve roller.</div>
+        <div class="doc-footer">
+          <span class="doc-date">—</span>
+          <div class="doc-tags"><span class="tag">scrum</span><span class="tag">sprint</span></div>
+        </div>
+      </div>
+
+      <div class="doc-card cat-surec placeholder" data-tags="deployment release yayın" data-title="Deployment & Release Süreci">
+        <div class="doc-card-head">
+          <span class="doc-icon">↑</span>
+          <span class="doc-status status-wip">Yakında</span>
+        </div>
+        <div class="doc-title">Deployment & Release Süreci</div>
+        <div class="doc-desc">Production'a çıkış adımları, onay süreci ve rollback prosedürü.</div>
+        <div class="doc-footer">
+          <span class="doc-date">—</span>
+          <div class="doc-tags"><span class="tag">deploy</span><span class="tag">release</span></div>
+        </div>
+      </div>
+
+      <div class="doc-card cat-surec placeholder" data-tags="incident postmortem hata" data-title="Incident Yönetimi">
+        <div class="doc-card-head">
+          <span class="doc-icon">⚡</span>
+          <span class="doc-status status-wip">Yakında</span>
+        </div>
+        <div class="doc-title">Incident Yönetimi</div>
+        <div class="doc-desc">Production olaylarında iletişim zinciri, sorumluluklar ve postmortem şablonu.</div>
+        <div class="doc-footer">
+          <span class="doc-date">—</span>
+          <div class="doc-tags"><span class="tag">incident</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MİMARİ KARARLAR -->
+  <div class="category" data-cat="mimari">
+    <div class="cat-header">
+      <span class="cat-dot" style="background:#D2A8FF"></span>
+      <span class="cat-title">Mimari Kararlar</span>
+      <span class="cat-count" id="count-mimari">0</span>
+    </div>
+    <div class="cards-grid">
+
+      <div class="doc-card cat-mimari placeholder" data-tags="adr mimari karar" data-title="ADR — Mimari Karar Kaydı">
+        <div class="doc-card-head">
+          <span class="doc-icon">◆</span>
+          <span class="doc-status status-wip">Yakında</span>
+        </div>
+        <div class="doc-title">ADR Şablonu</div>
+        <div class="doc-desc">Mimari kararları kayıt altına almak için standart şablon ve örnekler.</div>
+        <div class="doc-footer">
+          <span class="doc-date">—</span>
+          <div class="doc-tags"><span class="tag">adr</span><span class="tag">mimari</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="empty-state">
+    <div class="empty-icon">⌕</div>
+    <p>Arama sonucu bulunamadı.</p>
+  </div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span>DevDocs · Ekip Dökümanları</span>
+  <span>GitHub Pages üzerinde barındırılıyor</span>
+</footer>
+
+<script>
+// Stats
+const allCards = document.querySelectorAll('.doc-card:not(.placeholder)');
+const placeholders = document.querySelectorAll('.doc-card.placeholder');
+document.getElementById('total-count').textContent = document.querySelectorAll('.doc-card').length;
+document.getElementById('live-count').textContent = allCards.length;
+document.getElementById('draft-count').textContent = placeholders.length;
+
+// Category counts
+document.querySelectorAll('.category').forEach(cat => {
+  const id = 'count-' + cat.dataset.cat;
+  const count = cat.querySelectorAll('.doc-card').length;
+  const el = document.getElementById(id);
+  if(el) el.textContent = count;
+});
+
+// Last updated
+document.getElementById('last-updated').textContent =
+  'Son güncelleme: ' + new Date().toLocaleDateString('tr-TR', {day:'numeric',month:'short',year:'numeric'});
+
+// Search
+const searchInput = document.getElementById('search-input');
+const countEl = document.getElementById('search-results-count');
+const emptyState = document.getElementById('empty-state');
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.doc-card');
+  let visible = 0;
+
+  cards.forEach(card => {
+    const title = (card.dataset.title || card.querySelector('.doc-title')?.textContent || '').toLowerCase();
+    const tags = (card.dataset.tags || '').toLowerCase();
+    const desc = (card.querySelector('.doc-desc')?.textContent || '').toLowerCase();
+    const match = !q || title.includes(q) || tags.includes(q) || desc.includes(q);
+    card.style.display = match ? '' : 'none';
+    if(match) visible++;
+  });
+
+  document.querySelectorAll('.category').forEach(cat => {
+    const anyVisible = [...cat.querySelectorAll('.doc-card')].some(c => c.style.display !== 'none');
+    cat.style.display = anyVisible ? '' : 'none';
+  });
+
+  if(q) {
+    countEl.textContent = visible + ' sonuç bulundu';
+    emptyState.style.display = visible === 0 ? 'block' : 'none';
+  } else {
+    countEl.textContent = '';
+    emptyState.style.display = 'none';
+    document.querySelectorAll('.category').forEach(c => c.style.display = '');
+  }
+});
+</script>
+
+</body>
+</html>
