@@ -43,6 +43,9 @@ header{position:sticky;top:0;z-index:100;padding:0 2rem;height:58px;display:flex
 .breadcrumb{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--dim);font-family:'JetBrains Mono',monospace}
 .breadcrumb-sep{color:var(--border2);font-size:10px}
 .breadcrumb-cur{color:var(--muted)}
+.lang-toggle{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:2px;gap:2px}
+.lang-btn{font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;padding:3px 10px;border-radius:16px;border:none;cursor:pointer;background:transparent;color:var(--dim);transition:background .15s,color .15s;letter-spacing:.05em}
+.lang-btn.active{background:var(--blue);color:#fff}
 .hero{position:relative;z-index:1;padding:3.5rem 2rem 2.5rem;max-width:960px;margin:0 auto;width:100%}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);background:var(--blue-bg);border:1px solid rgba(56,189,248,.15);border-radius:20px;padding:4px 14px;margin-bottom:1.25rem}
 .hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue);animation:blink 2s ease-in-out infinite}
@@ -127,13 +130,18 @@ footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid va
     <span class="logo-text">Notlarım <span>/ Kişisel</span></span>
   </a>
   <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="tr">TR</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+    <span class="nav-divider"></span>
     <a href="../index.html" class="back-btn">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8.5 2.5L4 7l4.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Ana Sayfa
+      <span id="back-label">Ana Sayfa</span>
     </a>
     <span class="nav-divider"></span>
     <div class="breadcrumb">
-      <span>Teknik</span>
+      <span id="breadcrumb-parent">Teknik</span>
       <span class="breadcrumb-sep">/</span>
       <span class="breadcrumb-cur">Git Flow</span>
     </div>
@@ -141,133 +149,106 @@ footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid va
 </header>
 
 <div class="hero" id="hero"></div>
-
 <main class="main" id="main"></main>
 
 <footer>
-  <span><span class="footer-dot"></span>Git Flow Referans Kartı · v1.0</span>
+  <span><span class="footer-dot"></span><span id="footer-label">Git Flow Referans Kartı · v1.0</span></span>
   <span>feature / bugfix / hotfix · GitLab CI/CD</span>
 </footer>
 
 <script>
 const COLOR = {
-  green:  { text:'var(--green)',  bg:'var(--green-bg)',  border:'var(--green-border)' },
-  blue:   { text:'var(--blue)',   bg:'var(--blue-bg)',   border:'var(--blue-border)'  },
-  red:    { text:'var(--red)',    bg:'var(--red-bg)',    border:'var(--red-border)'   },
-  amber:  { text:'var(--amber)',  bg:'var(--amber-bg)',  border:'rgba(245,158,11,.25)'},
-  purple: { text:'var(--purple)', bg:'var(--purple-bg)', border:'rgba(167,139,250,.3)'},
-  muted:  { text:'var(--muted)',  bg:'var(--bg3)',       border:'var(--border)'       }
+  green:  'var(--green)', blue: 'var(--blue)', red: 'var(--red)',
+  amber:  'var(--amber)', purple: 'var(--purple)', muted: 'var(--muted)'
 };
 
-function pill(type) {
-  const cls = type === 'master' ? 'pill-master' : 'pill-develop';
-  return `<span class="pill ${cls}">${type}</span>`;
-}
+let currentLang = 'tr';
+let allData = null;
 
+function pill(type) {
+  return `<span class="pill ${type==='master'?'pill-master':'pill-develop'}">${type}</span>`;
+}
 function sec(color, label) {
   return `<div class="sec"><span class="sec-dot" style="background:${color}"></span><span class="sec-text">${label}</span><span class="sec-line"></span></div>`;
 }
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
-function renderHero(meta) {
-  const c = COLOR.green;
-  const badges = meta.badges.map(b =>
+function renderHero(d) {
+  const m = d.meta;
+  const badges = m.badges.map(b =>
     `<span class="meta-pill" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border)">${b}</span>`
   ).join('');
   document.getElementById('hero').innerHTML = `
-    <div class="hero-eyebrow">${meta.eyebrow}</div>
-    <h1>${meta.title}<br><em>${meta.titleItalic}</em></h1>
+    <div class="hero-eyebrow">${m.eyebrow}</div>
+    <h1>${m.title}<br><em>${m.titleItalic}</em></h1>
     <div class="hero-meta">
-      <span class="meta-pill" style="color:${c.text};background:${c.bg};border-color:${c.border}">● Yayında</span>
-      <span class="meta-pill" style="color:var(--muted);background:var(--bg3);border-color:var(--border)">${meta.date}</span>
+      <span class="meta-pill" style="color:var(--green);background:var(--green-bg);border-color:var(--green-border)">● ${m.liveLabel}</span>
+      <span class="meta-pill" style="color:var(--muted);background:var(--bg3);border-color:var(--border)">${m.date}</span>
       ${badges}
     </div>`;
 }
 
 function renderBranches(branches) {
-  const cards = branches.map(b => {
+  return '<div class="cards">' + branches.map(b => {
     const flowTo = b.type === 'hotfix'
-      ? `<div class="flow-line"><span class="arrow-sm">→</span><span class="pill pill-master">master</span></div>
+      ? `<div class="flow-line">${pill('master')}<span class="arrow-sm">→</span><span style="font-size:11px;color:var(--muted)">branch</span><span class="arrow-sm">→</span>${pill('master')}</div>
          <div class="flow-line"><span style="font-size:10px;color:var(--dim)">${b.flowExtra}</span></div>`
       : `<div class="flow-line">${pill(b.flowFrom)}<span class="arrow-sm">→</span><span style="font-size:11px;color:var(--muted)">branch</span><span class="arrow-sm">→</span>${pill(b.flowTo)}</div>`;
+    const exColor = b.type==='feature'?'var(--green)':b.type==='bugfix'?'var(--blue)':'var(--red)';
     const warn = b.warning ? `<div class="bcard-warn">⚠ ${b.warning}</div>` : '';
-    const exColor = b.type === 'feature' ? 'var(--green)' : b.type === 'bugfix' ? 'var(--blue)' : 'var(--red)';
-    return `
-      <div class="bcard bcard-${b.type}">
-        <div class="bcard-head"><span class="bcard-label">${b.label}</span><span class="bcard-icon">${b.icon}</span></div>
-        <p class="bcard-desc">${b.description}</p>
-        ${flowTo}
-        <div class="bcard-ex" style="color:${exColor}">${b.example}</div>
-        ${warn}
-      </div>`;
-  }).join('');
-  return `<div class="cards">${cards}</div>`;
+    return `<div class="bcard bcard-${b.type}">
+      <div class="bcard-head"><span class="bcard-label">${b.label}</span><span class="bcard-icon">${b.icon}</span></div>
+      <p class="bcard-desc">${b.description}</p>${flowTo}
+      <div class="bcard-ex" style="color:${exColor}">${b.example}</div>${warn}
+    </div>`;
+  }).join('') + '</div>';
 }
 
-function renderQuickref(rows) {
-  const trs = rows.map(r => {
-    const c = COLOR[r.durumColor] || COLOR.muted;
-    const hedefPills = r.hedef.includes('+')
-      ? `${pill('master')} + ${pill('develop')}`
-      : pill(r.hedef);
-    const tag = r.tag
-      ? `<span class="pill pill-tag">${r.tag}</span>`
-      : `<span style="color:var(--dim)">—</span>`;
+function renderQuickref(qr) {
+  const ths = qr.headers.map(h => `<th>${h}</th>`).join('');
+  const trs = qr.rows.map(r => {
+    const hedefPills = r.hedef.includes('+') ? `${pill('master')} + ${pill('develop')}` : pill(r.hedef);
+    const tag = r.tag ? `<span class="pill pill-tag">${r.tag}</span>` : `<span style="color:var(--dim)">—</span>`;
     return `<tr>
-      <td style="color:${c.text};font-weight:600">${r.durum}</td>
+      <td style="color:${COLOR[r.durumColor]};font-weight:600">${r.durum}</td>
       <td><code>${r.branch}</code></td>
       <td>${pill(r.kaynak)}</td>
       <td>${hedefPills}</td>
       <td>${tag}</td>
     </tr>`;
   }).join('');
-  return `
-    <div class="qref">
-      <table>
-        <thead><tr><th>Durum</th><th>Branch</th><th>Kaynak</th><th>Hedef</th><th>Tag</th></tr></thead>
-        <tbody>${trs}</tbody>
-      </table>
-    </div>`;
+  return `<div class="qref"><table><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table></div>`;
 }
 
 function renderChecklist(items) {
-  const cells = items.map((item, i) =>
-    `<div class="check-item"><span class="check-dot">${i+1}</span>${item}</div>`
-  ).join('');
-  return `<div class="check-grid">${cells}</div>`;
+  return '<div class="check-grid">' +
+    items.map((item, i) => `<div class="check-item"><span class="check-dot">${i+1}</span>${item}</div>`).join('') +
+    '</div>';
 }
 
 function renderCiCards(cards) {
-  const items = cards.map(c => {
-    const col = COLOR[c.titleColor] || COLOR.muted;
-    return `
-      <div class="ci-card">
-        <h3 style="color:${col.text}">${c.titleIcon} ${c.title}</h3>
-        <p>${c.description}</p>
-        <pre>${c.code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>
-      </div>`;
-  }).join('');
-  return `<div class="ci-grid">${items}</div>`;
+  return '<div class="ci-grid">' + cards.map(c =>
+    `<div class="ci-card">
+      <h3 style="color:${COLOR[c.titleColor]}">${c.titleIcon} ${c.title}</h3>
+      <p>${c.description}</p>
+      <pre>${esc(c.code)}</pre>
+    </div>`
+  ).join('') + '</div>';
 }
 
 function renderConflictSteps(steps) {
-  const rows = steps.map((s, i) => `
-    <div class="step-row">
+  return '<div class="conflict-steps">' + steps.map((s, i) =>
+    `<div class="step-row">
       <span class="step-num">${i+1}</span>
-      <div>
-        <div class="step-title">${s.title}</div>
-        <code class="step-code">${s.code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code>
-      </div>
-    </div>`).join('');
-  return `<div class="conflict-steps">${rows}</div>`;
+      <div><div class="step-title">${s.title}</div><code class="step-code">${esc(s.code)}</code></div>
+    </div>`
+  ).join('') + '</div>';
 }
 
-const SVG_DIAGRAM = `<div class="flow-wrap">
-  <svg class="flow-svg" viewBox="0 0 740 395" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </marker>
-</defs>
+const SVG_DIAGRAM = `<div class="flow-wrap"><svg class="flow-svg" viewBox="0 0 740 395" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
 <text x="8" y="79" font-family="'Courier New',Courier,monospace" font-size="10" fill="#3D5166" font-weight="600">master</text>
 <text x="8" y="219" font-family="'Courier New',Courier,monospace" font-size="10" fill="#3D5166" font-weight="600">develop</text>
 <text x="8" y="324" font-family="'Courier New',Courier,monospace" font-size="10" fill="#3D5166" font-weight="600">branches</text>
@@ -332,33 +313,43 @@ const SVG_DIAGRAM = `<div class="flow-wrap">
 <line x1="590" y1="382" x2="601" y2="382" stroke="#3D5166" stroke-width="1.5"/>
 <line x1="607" y1="382" x2="618" y2="382" stroke="#3D5166" stroke-width="1.5"/>
 <text x="623" y="386" font-family="'Courier New',Courier,monospace" font-size="8.5" fill="#3D5166">gecis (baglantisiz)</text>
-  </svg>
-</div>`;
+</svg></div>`;
 
-function render(data) {
-  document.title = `${data.meta.title} ${data.meta.titleItalic}`;
-  renderHero(data.meta);
-
+function render(d) {
+  renderHero(d);
+  const flowLabel   = currentLang === 'tr' ? 'Tam akış diyagramı'   : 'Full flow diagram';
+  const branchLabel = currentLang === 'tr' ? 'Branch türleri'        : 'Branch types';
+  const refLabel    = currentLang === 'tr' ? 'Hızlı başvuru'         : 'Quick reference';
+  const conflLabel  = currentLang === 'tr' ? d.conflictTitle          : d.conflictTitle;
   document.getElementById('main').innerHTML =
-    sec('var(--blue)', 'Tam akış diyagramı') +
-    SVG_DIAGRAM +
-    sec('var(--green)', 'Branch türleri') +
-    renderBranches(data.branches) +
-    sec('var(--purple)', 'Hızlı başvuru') +
-    renderQuickref(data.quickref) +
-    sec('var(--red)', 'Kontrol listesi — hotfix') +
-    renderChecklist(data.checklist) +
-    sec('var(--amber)', 'GitLab CI/CD pipeline yapılandırması') +
-    `<div class="tip-bar"><span>💡</span><span>${data.tip}</span></div>` +
-    renderCiCards(data.ciCards) +
-    sec('var(--blue)', 'Conflict çözme — back-merge adımları') +
-    renderConflictSteps(data.conflictSteps) +
-    `<div class="note-bar"><span>⚠</span><span>${data.warning}</span></div>`;
+    sec('var(--blue)',   flowLabel)   + SVG_DIAGRAM +
+    sec('var(--green)',  branchLabel) + renderBranches(d.branches) +
+    sec('var(--purple)', refLabel)    + renderQuickref(d.quickref) +
+    sec('var(--red)',    d.checklistTitle) + renderChecklist(d.checklist) +
+    sec('var(--amber)',  d.ciTitle) +
+    `<div class="tip-bar"><span>💡</span><span>${d.tip}</span></div>` +
+    renderCiCards(d.ciCards) +
+    sec('var(--blue)',   d.conflictTitle) + renderConflictSteps(d.conflictSteps) +
+    `<div class="note-bar"><span>⚠</span><span>${d.warning}</span></div>`;
+
+  document.getElementById('back-label').textContent    = currentLang === 'tr' ? 'Ana Sayfa' : 'Home';
+  document.getElementById('breadcrumb-parent').textContent = currentLang === 'tr' ? 'Teknik' : 'Technical';
+  document.getElementById('footer-label').textContent  = currentLang === 'tr' ? 'Git Flow Referans Kartı · v1.0' : 'Git Flow Reference Card · v1.0';
+  document.documentElement.lang = currentLang;
 }
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.lang === currentLang) return;
+    currentLang = btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === currentLang));
+    render(allData[currentLang]);
+  });
+});
 
 fetch('../data/git-flow.json')
   .then(r => r.json())
-  .then(render);
+  .then(data => { allData = data; render(data[currentLang]); });
 </script>
 </body>
 </html>
