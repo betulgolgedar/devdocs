@@ -44,7 +44,13 @@ header{position:sticky;top:0;z-index:100;padding:0 2rem;height:58px;display:flex
 .logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#0EA5E9,#22C55E);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11px;color:#fff;flex-shrink:0}
 .logo-text{font-size:15px;font-weight:700;letter-spacing:-.01em}
 .logo-text span{color:var(--muted);font-weight:400}
+.header-right{display:flex;align-items:center;gap:12px}
 .header-tag{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--dim);border:1px solid var(--border);border-radius:20px;padding:2px 10px}
+
+/* ── LANG TOGGLE ── */
+.lang-toggle{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:2px;gap:2px}
+.lang-btn{font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;padding:3px 10px;border-radius:16px;border:none;cursor:pointer;background:transparent;color:var(--dim);transition:background .15s,color .15s;letter-spacing:.05em}
+.lang-btn.active{background:var(--blue);color:#fff}
 
 .hero{position:relative;z-index:1;padding:5rem 2rem 3rem;max-width:1000px;margin:0 auto;width:100%}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);background:var(--blue-bg);border:1px solid rgba(56,189,248,.15);border-radius:20px;padding:4px 14px;margin-bottom:1.5rem}
@@ -102,9 +108,7 @@ header{position:sticky;top:0;z-index:100;padding:0 2rem;height:58px;display:flex
 .doc-date{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--dim)}
 .doc-tags{display:flex;gap:4px;flex-wrap:wrap}
 .tag{font-size:10px;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:5px;background:var(--bg4);border:1px solid var(--border);color:var(--dim)}
-
 .doc-card.placeholder{opacity:.4;pointer-events:none;border-style:dashed;transform:none!important}
-
 .doc-card.featured{grid-column:1/-1;flex-direction:row;gap:2rem;align-items:center;background:linear-gradient(135deg,var(--bg2),var(--bg3));border-color:var(--border2);padding:1.5rem 2rem}
 @media(max-width:640px){.doc-card.featured{flex-direction:column;gap:1rem}}
 .featured-left{flex:1}
@@ -148,13 +152,19 @@ footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid va
     <div class="logo-mark">me</div>
     <span class="logo-text">Notlarım <span>/ Kişisel</span></span>
   </div>
-  <span class="header-tag" id="last-updated"></span>
+  <div class="header-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="tr">TR</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+    <span class="header-tag" id="last-updated"></span>
+  </div>
 </header>
 
 <div class="hero">
-  <div class="hero-eyebrow">Kişisel Dökümanlar</div>
-  <h1>Öğrendiklerim,<br><em>notlarım.</em></h1>
-  <p class="hero-sub">Teknik rehberler, öğrenme notları ve araç kurulumları. Kendim için tuttuğum, herkese açık bir arşiv.</p>
+  <div class="hero-eyebrow" id="hero-eyebrow">Kişisel Dökümanlar</div>
+  <h1 id="hero-title">Öğrendiklerim,<br><em>notlarım.</em></h1>
+  <p class="hero-sub" id="hero-sub">Teknik rehberler, öğrenme notları ve araç kurulumları. Kendim için tuttuğum, herkese açık bir arşiv.</p>
 
   <div class="search-wrap">
     <div class="search-inner">
@@ -167,15 +177,15 @@ footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid va
   <div class="stats-row">
     <div class="stat-item">
       <span class="stat-num" id="total-count">—</span>
-      <span class="stat-label">Toplam</span>
+      <span class="stat-label" id="label-total">Toplam</span>
     </div>
     <div class="stat-item">
       <span class="stat-num" id="live-count">—</span>
-      <span class="stat-label">Yayında</span>
+      <span class="stat-label" id="label-live">Yayında</span>
     </div>
     <div class="stat-item">
       <span class="stat-num" id="draft-count">—</span>
-      <span class="stat-label">Taslak</span>
+      <span class="stat-label" id="label-draft">Taslak</span>
     </div>
   </div>
 </div>
@@ -183,7 +193,7 @@ footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid va
 <main class="main" id="main-content">
   <div id="empty-state">
     <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="21" cy="21" r="12" stroke="#3D5166" stroke-width="2"/><line x1="29" y1="29" x2="40" y2="40" stroke="#3D5166" stroke-width="2" stroke-linecap="round"/></svg>
-    <p>Arama sonucu bulunamadı.</p>
+    <p id="empty-text">Arama sonucu bulunamadı.</p>
   </div>
 </main>
 
@@ -193,15 +203,56 @@ footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid va
 </footer>
 
 <script>
+const I18N = {
+  tr: {
+    eyebrow: 'Kişisel Dökümanlar',
+    title: 'Öğrendiklerim,<br><em>notlarım.</em>',
+    sub: 'Teknik rehberler, öğrenme notları ve araç kurulumları. Kendim için tuttuğum, herkese açık bir arşiv.',
+    placeholder: 'Not veya etiket ara...',
+    total: 'Toplam', live: 'Yayında', draft: 'Taslak',
+    liveLabel: 'Yayında', wipLabel: 'Yakında',
+    featuredLabel: 'Öne Çıkan',
+    empty: 'Arama sonucu bulunamadı.',
+    results: n => n + ' sonuç'
+  },
+  en: {
+    eyebrow: 'Personal Docs',
+    title: 'Things I learned,<br><em>my notes.</em>',
+    sub: 'Technical guides, learning notes and tool setups. An open archive I keep for myself.',
+    placeholder: 'Search notes or tags...',
+    total: 'Total', live: 'Published', draft: 'Draft',
+    liveLabel: 'Live', wipLabel: 'Soon',
+    featuredLabel: 'Featured',
+    empty: 'No results found.',
+    results: n => n + ' results'
+  }
+};
+
+let currentLang = 'tr';
+let allData = null;
+
 document.addEventListener('keydown', e => {
-  if((e.metaKey||e.ctrlKey) && e.key==='k'){e.preventDefault();document.getElementById('search-input').focus()}
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); document.getElementById('search-input').focus(); }
 });
 
 const now = new Date();
-document.getElementById('last-updated').textContent = now.toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'});
+document.getElementById('last-updated').textContent = now.toLocaleDateString('tr-TR', {day:'numeric',month:'short',year:'numeric'});
 document.getElementById('footer-year').textContent = now.getFullYear();
 
-function buildFeaturedCard(note) {
+function applyI18n(lang) {
+  const t = I18N[lang];
+  document.getElementById('hero-eyebrow').textContent = t.eyebrow;
+  document.getElementById('hero-title').innerHTML = t.title;
+  document.getElementById('hero-sub').textContent = t.sub;
+  document.getElementById('search-input').placeholder = t.placeholder;
+  document.getElementById('label-total').textContent = t.total;
+  document.getElementById('label-live').textContent = t.live;
+  document.getElementById('label-draft').textContent = t.draft;
+  document.getElementById('empty-text').textContent = t.empty;
+  document.documentElement.lang = lang;
+}
+
+function buildFeaturedCard(note, t) {
   const el = document.createElement('a');
   el.href = note.url;
   el.className = `doc-card cat-${note.category} featured`;
@@ -209,40 +260,40 @@ function buildFeaturedCard(note) {
   el.dataset.title = note.title;
   el.innerHTML = `
     <div class="featured-left">
-      <span class="featured-badge">Öne Çıkan</span>
+      <span class="featured-badge">${t.featuredLabel}</span>
       <div class="doc-title">${note.title}</div>
       <div class="doc-desc">${note.description}</div>
       <div class="doc-tags" style="margin-top:.75rem">
-        ${note.tags.map(t=>`<span class="tag">${t}</span>`).join('')}
+        ${note.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
       </div>
     </div>
     <div class="featured-right">
-      <span class="doc-status status-live">Yayında</span>
-      <span class="doc-date">${note.date||'—'}</span>
+      <span class="doc-status status-live">${t.liveLabel}</span>
+      <span class="doc-date">${note.date || '—'}</span>
     </div>`;
   return el;
 }
 
-function buildPlaceholderCard(note) {
+function buildPlaceholderCard(note, t) {
   const el = document.createElement('div');
   el.className = `doc-card cat-${note.category} placeholder`;
   el.dataset.tags = note.tags.join(' ');
   el.dataset.title = note.title;
   el.innerHTML = `
     <div class="doc-card-head">
-      <div class="doc-icon-wrap">${note.icon||'◈'}</div>
-      <span class="doc-status status-wip">Yakında</span>
+      <div class="doc-icon-wrap">${note.icon || '◈'}</div>
+      <span class="doc-status status-wip">${t.wipLabel}</span>
     </div>
     <div class="doc-title">${note.title}</div>
     <div class="doc-desc">${note.description}</div>
     <div class="doc-footer">
       <span class="doc-date">—</span>
-      <div class="doc-tags">${note.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <div class="doc-tags">${note.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>
     </div>`;
   return el;
 }
 
-function buildLiveCard(note) {
+function buildLiveCard(note, t) {
   const el = document.createElement('a');
   el.href = note.url;
   el.className = `doc-card cat-${note.category}`;
@@ -250,80 +301,106 @@ function buildLiveCard(note) {
   el.dataset.title = note.title;
   el.innerHTML = `
     <div class="doc-card-head">
-      <div class="doc-icon-wrap">${note.icon||'◈'}</div>
-      <span class="doc-status status-live">Yayında</span>
+      <div class="doc-icon-wrap">${note.icon || '◈'}</div>
+      <span class="doc-status status-live">${t.liveLabel}</span>
     </div>
     <div class="doc-title">${note.title}</div>
     <div class="doc-desc">${note.description}</div>
     <div class="doc-footer">
-      <span class="doc-date">${note.date||'—'}</span>
-      <div class="doc-tags">${note.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <span class="doc-date">${note.date || '—'}</span>
+      <div class="doc-tags">${note.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>
     </div>`;
   return el;
 }
 
-function renderNotes(data) {
+function renderNotes(data, lang) {
+  const t = I18N[lang];
   const main = document.getElementById('main-content');
   const emptyState = document.getElementById('empty-state');
 
+  main.querySelectorAll('.category').forEach(el => el.remove());
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-results-count').textContent = '';
+
+  const filtered = data.notes.filter(n => n.lang === lang);
+
   data.categories.forEach(cat => {
-    const catNotes = data.notes.filter(n => n.category === cat.id);
+    const catNotes = filtered.filter(n => n.category === cat.id);
     if (!catNotes.length) return;
 
     const section = document.createElement('div');
     section.className = 'category';
     section.dataset.cat = cat.id;
-
     section.innerHTML = `
       <div class="section-label">
         <span class="section-label-dot" style="background:${cat.color}"></span>
         <span class="section-label-text">${cat.label}</span>
         <span class="section-label-line"></span>
-        <span class="section-label-count" id="count-${cat.id}">${catNotes.length}</span>
+        <span class="section-label-count">${catNotes.length}</span>
       </div>`;
 
     const grid = document.createElement('div');
     grid.className = 'cards-grid';
-
     catNotes.forEach(note => {
-      if (note.featured) grid.appendChild(buildFeaturedCard(note));
-      else if (note.status === 'live') grid.appendChild(buildLiveCard(note));
-      else grid.appendChild(buildPlaceholderCard(note));
+      if (note.featured) grid.appendChild(buildFeaturedCard(note, t));
+      else if (note.status === 'live') grid.appendChild(buildLiveCard(note, t));
+      else grid.appendChild(buildPlaceholderCard(note, t));
     });
 
     section.appendChild(grid);
     main.insertBefore(section, emptyState);
   });
 
-  const all = document.querySelectorAll('.doc-card');
+  const all = main.querySelectorAll('.doc-card');
   document.getElementById('total-count').textContent = all.length;
-  document.getElementById('live-count').textContent = document.querySelectorAll('.doc-card:not(.placeholder)').length;
-  document.getElementById('draft-count').textContent = document.querySelectorAll('.doc-card.placeholder').length;
+  document.getElementById('live-count').textContent = main.querySelectorAll('.doc-card:not(.placeholder)').length;
+  document.getElementById('draft-count').textContent = main.querySelectorAll('.doc-card.placeholder').length;
+}
 
+function setupSearch(lang) {
+  const t = I18N[lang];
   const searchInput = document.getElementById('search-input');
   const countEl = document.getElementById('search-results-count');
-  searchInput.addEventListener('input', () => {
+  const emptyState = document.getElementById('empty-state');
+
+  searchInput.oninput = () => {
     const q = searchInput.value.toLowerCase().trim();
     let visible = 0;
     document.querySelectorAll('.doc-card').forEach(card => {
-      const t = (card.dataset.title||'').toLowerCase();
-      const g = (card.dataset.tags||'').toLowerCase();
-      const d = (card.querySelector('.doc-desc')?.textContent||'').toLowerCase();
-      const match = !q || t.includes(q) || g.includes(q) || d.includes(q);
+      const match = !q ||
+        (card.dataset.title || '').toLowerCase().includes(q) ||
+        (card.dataset.tags || '').toLowerCase().includes(q) ||
+        (card.querySelector('.doc-desc')?.textContent || '').toLowerCase().includes(q);
       card.style.display = match ? '' : 'none';
       if (match) visible++;
     });
     document.querySelectorAll('.category').forEach(cat => {
       cat.style.display = [...cat.querySelectorAll('.doc-card')].some(c => c.style.display !== 'none') ? '' : 'none';
     });
-    if (q) { countEl.textContent = visible + ' sonuç'; emptyState.style.display = visible === 0 ? 'block' : 'none'; }
+    if (q) { countEl.textContent = t.results(visible); emptyState.style.display = visible === 0 ? 'block' : 'none'; }
     else { countEl.textContent = ''; emptyState.style.display = 'none'; document.querySelectorAll('.category').forEach(c => c.style.display = ''); }
-  });
+  };
 }
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.lang === currentLang) return;
+    currentLang = btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === currentLang));
+    applyI18n(currentLang);
+    renderNotes(allData, currentLang);
+    setupSearch(currentLang);
+  });
+});
 
 fetch('data/notes.json')
   .then(r => r.json())
-  .then(renderNotes)
+  .then(data => {
+    allData = data;
+    applyI18n(currentLang);
+    renderNotes(data, currentLang);
+    setupSearch(currentLang);
+  })
   .catch(() => {
     document.getElementById('total-count').textContent = '!';
   });

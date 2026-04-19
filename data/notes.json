@@ -15,7 +15,8 @@
       "status": "live",
       "date": "Nis 2025",
       "featured": true,
-      "icon": null
+      "icon": null,
+      "lang": "tr"
     },
     {
       "id": "terminal-cheatsheet",
@@ -27,7 +28,8 @@
       "status": "wip",
       "date": null,
       "featured": false,
-      "icon": "⬡"
+      "icon": "⬡",
+      "lang": "tr"
     },
     {
       "id": "docker-quickstart",
@@ -39,7 +41,8 @@
       "status": "wip",
       "date": null,
       "featured": false,
-      "icon": "◈"
+      "icon": "◈",
+      "lang": "tr"
     },
     {
       "id": "book-notes",
@@ -51,7 +54,8 @@
       "status": "wip",
       "date": null,
       "featured": false,
-      "icon": "◆"
+      "icon": "◆",
+      "lang": "tr"
     },
     {
       "id": "dev-env-setup",
@@ -63,7 +67,34 @@
       "status": "wip",
       "date": null,
       "featured": false,
-      "icon": "◎"
+      "icon": "◎",
+      "lang": "tr"
+    },
+    {
+      "id": "git-flow-en",
+      "title": "Git Flow — Branch Management",
+      "description": "Feature, bugfix and hotfix branch management with GitLab CI/CD. Naming conventions, pipeline configuration and back-merge workflow.",
+      "url": "docs/git-flow.html",
+      "category": "teknik",
+      "tags": ["git", "gitlab", "ci/cd", "hotfix"],
+      "status": "live",
+      "date": "Apr 2025",
+      "featured": true,
+      "icon": null,
+      "lang": "en"
+    },
+    {
+      "id": "terminal-cheatsheet-en",
+      "title": "Terminal Commands Cheatsheet",
+      "description": "Frequently used terminal commands and shortcuts.",
+      "url": null,
+      "category": "teknik",
+      "tags": ["terminal", "linux"],
+      "status": "wip",
+      "date": null,
+      "featured": false,
+      "icon": "⬡",
+      "lang": "en"
     }
   ]
 }
