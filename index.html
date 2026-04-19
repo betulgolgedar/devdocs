@@ -105,7 +105,6 @@ header{position:sticky;top:0;z-index:100;padding:0 2rem;height:58px;display:flex
 
 .doc-card.placeholder{opacity:.4;pointer-events:none;border-style:dashed;transform:none!important}
 
-/* Featured */
 .doc-card.featured{grid-column:1/-1;flex-direction:row;gap:2rem;align-items:center;background:linear-gradient(135deg,var(--bg2),var(--bg3));border-color:var(--border2);padding:1.5rem 2rem}
 @media(max-width:640px){.doc-card.featured{flex-direction:column;gap:1rem}}
 .featured-left{flex:1}
@@ -182,87 +181,10 @@ footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid va
 </div>
 
 <main class="main" id="main-content">
-
-  <div class="category" data-cat="teknik">
-    <div class="section-label">
-      <span class="section-label-dot" style="background:#38BDF8"></span>
-      <span class="section-label-text">Teknik Notlar</span>
-      <span class="section-label-line"></span>
-      <span class="section-label-count" id="count-teknik">0</span>
-    </div>
-    <div class="cards-grid">
-
-      <a href="docs/git-flow.html" class="doc-card cat-teknik featured" data-tags="git gitlab cicd branch hotfix bugfix feature" data-title="Git Flow — Dal Yönetimi">
-        <div class="featured-left">
-          <span class="featured-badge">Öne Çıkan</span>
-          <div class="doc-title">Git Flow — Dal Yönetimi</div>
-          <div class="doc-desc">GitLab CI/CD süreçlerinde feature, bugfix ve hotfix branch yönetimi. Naming convention, pipeline yapılandırması ve back-merge akışı.</div>
-          <div class="doc-tags" style="margin-top:.75rem">
-            <span class="tag">git</span><span class="tag">gitlab</span><span class="tag">ci/cd</span><span class="tag">hotfix</span>
-          </div>
-        </div>
-        <div class="featured-right">
-          <span class="doc-status status-live">Yayında</span>
-          <span class="doc-date">Nis 2025</span>
-        </div>
-      </a>
-
-      <div class="doc-card cat-teknik placeholder" data-tags="terminal komut linux bash" data-title="Terminal Komutları Cheatsheet">
-        <div class="doc-card-head"><div class="doc-icon-wrap">⬡</div><span class="doc-status status-wip">Yakında</span></div>
-        <div class="doc-title">Terminal Komutları Cheatsheet</div>
-        <div class="doc-desc">Sık kullandığım terminal komutları ve kısayollar.</div>
-        <div class="doc-footer"><span class="doc-date">—</span><div class="doc-tags"><span class="tag">terminal</span><span class="tag">linux</span></div></div>
-      </div>
-
-      <div class="doc-card cat-teknik placeholder" data-tags="docker container kurulum" data-title="Docker Hızlı Başlangıç">
-        <div class="doc-card-head"><div class="doc-icon-wrap">◈</div><span class="doc-status status-wip">Yakında</span></div>
-        <div class="doc-title">Docker Hızlı Başlangıç</div>
-        <div class="doc-desc">Container, image, volume temel kavramlar ve sık kullanılan komutlar.</div>
-        <div class="doc-footer"><span class="doc-date">—</span><div class="doc-tags"><span class="tag">docker</span><span class="tag">devops</span></div></div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="category" data-cat="ogrenme">
-    <div class="section-label">
-      <span class="section-label-dot" style="background:#A78BFA"></span>
-      <span class="section-label-text">Öğrenme Notları</span>
-      <span class="section-label-line"></span>
-      <span class="section-label-count" id="count-ogrenme">0</span>
-    </div>
-    <div class="cards-grid">
-      <div class="doc-card cat-ogrenme placeholder" data-tags="kitap özet" data-title="Kitap Özetleri">
-        <div class="doc-card-head"><div class="doc-icon-wrap">◆</div><span class="doc-status status-wip">Yakında</span></div>
-        <div class="doc-title">Kitap Özetleri</div>
-        <div class="doc-desc">Okuduğum teknik ve kişisel gelişim kitaplarından notlar.</div>
-        <div class="doc-footer"><span class="doc-date">—</span><div class="doc-tags"><span class="tag">kitap</span></div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="category" data-cat="araclar">
-    <div class="section-label">
-      <span class="section-label-dot" style="background:#F59E0B"></span>
-      <span class="section-label-text">Araçlar & Kurulumlar</span>
-      <span class="section-label-line"></span>
-      <span class="section-label-count" id="count-araclar">0</span>
-    </div>
-    <div class="cards-grid">
-      <div class="doc-card cat-araclar placeholder" data-tags="macos setup kurulum" data-title="Geliştirici Ortamı Kurulumu">
-        <div class="doc-card-head"><div class="doc-icon-wrap">◎</div><span class="doc-status status-wip">Yakında</span></div>
-        <div class="doc-title">Geliştirici Ortamı Kurulumu</div>
-        <div class="doc-desc">Sıfırdan geliştirici ortamı kurmak için adım adım rehber.</div>
-        <div class="doc-footer"><span class="doc-date">—</span><div class="doc-tags"><span class="tag">kurulum</span><span class="tag">araçlar</span></div></div>
-      </div>
-    </div>
-  </div>
-
   <div id="empty-state">
     <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="21" cy="21" r="12" stroke="#3D5166" stroke-width="2"/><line x1="29" y1="29" x2="40" y2="40" stroke="#3D5166" stroke-width="2" stroke-linecap="round"/></svg>
     <p>Arama sonucu bulunamadı.</p>
   </div>
-
 </main>
 
 <footer>
@@ -274,37 +196,137 @@ footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid va
 document.addEventListener('keydown', e => {
   if((e.metaKey||e.ctrlKey) && e.key==='k'){e.preventDefault();document.getElementById('search-input').focus()}
 });
+
 const now = new Date();
-document.getElementById('total-count').textContent = document.querySelectorAll('.doc-card').length;
-document.getElementById('live-count').textContent = document.querySelectorAll('.doc-card:not(.placeholder)').length;
-document.getElementById('draft-count').textContent = document.querySelectorAll('.doc-card.placeholder').length;
-document.querySelectorAll('.category').forEach(cat => {
-  const el = document.getElementById('count-'+cat.dataset.cat);
-  if(el) el.textContent = cat.querySelectorAll('.doc-card').length;
-});
 document.getElementById('last-updated').textContent = now.toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'});
 document.getElementById('footer-year').textContent = now.getFullYear();
 
-const searchInput = document.getElementById('search-input');
-const countEl = document.getElementById('search-results-count');
-const emptyState = document.getElementById('empty-state');
-searchInput.addEventListener('input',()=>{
-  const q = searchInput.value.toLowerCase().trim();
-  let visible = 0;
-  document.querySelectorAll('.doc-card').forEach(card=>{
-    const t=(card.dataset.title||card.querySelector('.doc-title')?.textContent||'').toLowerCase();
-    const g=(card.dataset.tags||'').toLowerCase();
-    const d=(card.querySelector('.doc-desc')?.textContent||'').toLowerCase();
-    const match=!q||t.includes(q)||g.includes(q)||d.includes(q);
-    card.style.display=match?'':'none';
-    if(match)visible++;
+function buildFeaturedCard(note) {
+  const el = document.createElement('a');
+  el.href = note.url;
+  el.className = `doc-card cat-${note.category} featured`;
+  el.dataset.tags = note.tags.join(' ');
+  el.dataset.title = note.title;
+  el.innerHTML = `
+    <div class="featured-left">
+      <span class="featured-badge">Öne Çıkan</span>
+      <div class="doc-title">${note.title}</div>
+      <div class="doc-desc">${note.description}</div>
+      <div class="doc-tags" style="margin-top:.75rem">
+        ${note.tags.map(t=>`<span class="tag">${t}</span>`).join('')}
+      </div>
+    </div>
+    <div class="featured-right">
+      <span class="doc-status status-live">Yayında</span>
+      <span class="doc-date">${note.date||'—'}</span>
+    </div>`;
+  return el;
+}
+
+function buildPlaceholderCard(note) {
+  const el = document.createElement('div');
+  el.className = `doc-card cat-${note.category} placeholder`;
+  el.dataset.tags = note.tags.join(' ');
+  el.dataset.title = note.title;
+  el.innerHTML = `
+    <div class="doc-card-head">
+      <div class="doc-icon-wrap">${note.icon||'◈'}</div>
+      <span class="doc-status status-wip">Yakında</span>
+    </div>
+    <div class="doc-title">${note.title}</div>
+    <div class="doc-desc">${note.description}</div>
+    <div class="doc-footer">
+      <span class="doc-date">—</span>
+      <div class="doc-tags">${note.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>`;
+  return el;
+}
+
+function buildLiveCard(note) {
+  const el = document.createElement('a');
+  el.href = note.url;
+  el.className = `doc-card cat-${note.category}`;
+  el.dataset.tags = note.tags.join(' ');
+  el.dataset.title = note.title;
+  el.innerHTML = `
+    <div class="doc-card-head">
+      <div class="doc-icon-wrap">${note.icon||'◈'}</div>
+      <span class="doc-status status-live">Yayında</span>
+    </div>
+    <div class="doc-title">${note.title}</div>
+    <div class="doc-desc">${note.description}</div>
+    <div class="doc-footer">
+      <span class="doc-date">${note.date||'—'}</span>
+      <div class="doc-tags">${note.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>`;
+  return el;
+}
+
+function renderNotes(data) {
+  const main = document.getElementById('main-content');
+  const emptyState = document.getElementById('empty-state');
+
+  data.categories.forEach(cat => {
+    const catNotes = data.notes.filter(n => n.category === cat.id);
+    if (!catNotes.length) return;
+
+    const section = document.createElement('div');
+    section.className = 'category';
+    section.dataset.cat = cat.id;
+
+    section.innerHTML = `
+      <div class="section-label">
+        <span class="section-label-dot" style="background:${cat.color}"></span>
+        <span class="section-label-text">${cat.label}</span>
+        <span class="section-label-line"></span>
+        <span class="section-label-count" id="count-${cat.id}">${catNotes.length}</span>
+      </div>`;
+
+    const grid = document.createElement('div');
+    grid.className = 'cards-grid';
+
+    catNotes.forEach(note => {
+      if (note.featured) grid.appendChild(buildFeaturedCard(note));
+      else if (note.status === 'live') grid.appendChild(buildLiveCard(note));
+      else grid.appendChild(buildPlaceholderCard(note));
+    });
+
+    section.appendChild(grid);
+    main.insertBefore(section, emptyState);
   });
-  document.querySelectorAll('.category').forEach(cat=>{
-    cat.style.display=[...cat.querySelectorAll('.doc-card')].some(c=>c.style.display!=='none')?'':'none';
+
+  const all = document.querySelectorAll('.doc-card');
+  document.getElementById('total-count').textContent = all.length;
+  document.getElementById('live-count').textContent = document.querySelectorAll('.doc-card:not(.placeholder)').length;
+  document.getElementById('draft-count').textContent = document.querySelectorAll('.doc-card.placeholder').length;
+
+  const searchInput = document.getElementById('search-input');
+  const countEl = document.getElementById('search-results-count');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    let visible = 0;
+    document.querySelectorAll('.doc-card').forEach(card => {
+      const t = (card.dataset.title||'').toLowerCase();
+      const g = (card.dataset.tags||'').toLowerCase();
+      const d = (card.querySelector('.doc-desc')?.textContent||'').toLowerCase();
+      const match = !q || t.includes(q) || g.includes(q) || d.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    document.querySelectorAll('.category').forEach(cat => {
+      cat.style.display = [...cat.querySelectorAll('.doc-card')].some(c => c.style.display !== 'none') ? '' : 'none';
+    });
+    if (q) { countEl.textContent = visible + ' sonuç'; emptyState.style.display = visible === 0 ? 'block' : 'none'; }
+    else { countEl.textContent = ''; emptyState.style.display = 'none'; document.querySelectorAll('.category').forEach(c => c.style.display = ''); }
   });
-  if(q){countEl.textContent=visible+' sonuç';emptyState.style.display=visible===0?'block':'none'}
-  else{countEl.textContent='';emptyState.style.display='none';document.querySelectorAll('.category').forEach(c=>c.style.display='')}
-});
+}
+
+fetch('data/notes.json')
+  .then(r => r.json())
+  .then(renderNotes)
+  .catch(() => {
+    document.getElementById('total-count').textContent = '!';
+  });
 </script>
 </body>
 </html>

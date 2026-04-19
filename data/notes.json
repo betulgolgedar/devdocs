@@ -1,0 +1,69 @@
+{
+  "categories": [
+    { "id": "teknik",  "label": "Teknik Notlar",        "color": "#38BDF8" },
+    { "id": "ogrenme", "label": "Öğrenme Notları",      "color": "#A78BFA" },
+    { "id": "araclar", "label": "Araçlar & Kurulumlar", "color": "#F59E0B" }
+  ],
+  "notes": [
+    {
+      "id": "git-flow",
+      "title": "Git Flow — Dal Yönetimi",
+      "description": "GitLab CI/CD süreçlerinde feature, bugfix ve hotfix branch yönetimi. Naming convention, pipeline yapılandırması ve back-merge akışı.",
+      "url": "docs/git-flow.html",
+      "category": "teknik",
+      "tags": ["git", "gitlab", "ci/cd", "hotfix"],
+      "status": "live",
+      "date": "Nis 2025",
+      "featured": true,
+      "icon": null
+    },
+    {
+      "id": "terminal-cheatsheet",
+      "title": "Terminal Komutları Cheatsheet",
+      "description": "Sık kullandığım terminal komutları ve kısayollar.",
+      "url": null,
+      "category": "teknik",
+      "tags": ["terminal", "linux"],
+      "status": "wip",
+      "date": null,
+      "featured": false,
+      "icon": "⬡"
+    },
+    {
+      "id": "docker-quickstart",
+      "title": "Docker Hızlı Başlangıç",
+      "description": "Container, image, volume temel kavramlar ve sık kullanılan komutlar.",
+      "url": null,
+      "category": "teknik",
+      "tags": ["docker", "devops"],
+      "status": "wip",
+      "date": null,
+      "featured": false,
+      "icon": "◈"
+    },
+    {
+      "id": "book-notes",
+      "title": "Kitap Özetleri",
+      "description": "Okuduğum teknik ve kişisel gelişim kitaplarından notlar.",
+      "url": null,
+      "category": "ogrenme",
+      "tags": ["kitap"],
+      "status": "wip",
+      "date": null,
+      "featured": false,
+      "icon": "◆"
+    },
+    {
+      "id": "dev-env-setup",
+      "title": "Geliştirici Ortamı Kurulumu",
+      "description": "Sıfırdan geliştirici ortamı kurmak için adım adım rehber.",
+      "url": null,
+      "category": "araclar",
+      "tags": ["kurulum", "araçlar"],
+      "status": "wip",
+      "date": null,
+      "featured": false,
+      "icon": "◎"
+    }
+  ]
+}
