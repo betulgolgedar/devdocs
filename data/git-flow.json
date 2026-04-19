@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "eyebrow": "Teknik Döküman",
+    "title": "Git Flow —",
+    "titleItalic": "Dal Yönetimi",
+    "date": "Nis 2025",
+    "status": "live",
+    "badges": ["GitLab CI/CD", "v1.0"]
+  },
+  "branches": [
+    {
+      "type": "feature",
+      "label": "feature",
+      "icon": "✦",
+      "description": "Yeni geliştirmeler. Sıfırdan bir iş birimi eklemek için kullanılır.",
+      "flowFrom": "develop",
+      "flowTo": "develop",
+      "example": "feature/issue-12345",
+      "warning": null
+    },
+    {
+      "type": "bugfix",
+      "label": "bugfix",
+      "icon": "◎",
+      "description": "Test/staging ortamında tespit edilen hatalar. develop üzerinden açılır.",
+      "flowFrom": "develop",
+      "flowTo": "develop",
+      "example": "bugfix/issue-45645",
+      "warning": null
+    },
+    {
+      "type": "hotfix",
+      "label": "hotfix",
+      "icon": "⚡",
+      "description": "Production'da kritik hata. master'dan açılır, iki yere birden merge edilir.",
+      "flowFrom": "master",
+      "flowTo": "master",
+      "flowExtra": "+ back-merge → develop",
+      "example": "hotfix/issue-15610",
+      "warning": "develop'a back-merge zorunludur"
+    }
+  ],
+  "quickref": [
+    {
+      "durum": "Yeni özellik", "durumColor": "green",
+      "branch": "feature/issue-{id}",
+      "kaynak": "develop", "hedef": "develop", "tag": null
+    },
+    {
+      "durum": "Test hatası", "durumColor": "blue",
+      "branch": "bugfix/issue-{id}",
+      "kaynak": "develop", "hedef": "develop", "tag": null
+    },
+    {
+      "durum": "Prod hatası", "durumColor": "red",
+      "branch": "hotfix/issue-{id}",
+      "kaynak": "master", "hedef": "master + develop", "tag": "v1.x.y"
+    }
+  ],
+  "checklist": [
+    "master'dan branch aç",
+    "Düzelt, push'la",
+    "master hedefli MR aç & merge et",
+    "Tag oluştur (v1.x.y)",
+    "develop'a back-merge MR aç",
+    "Conflict varsa hemen çöz & merge et"
+  ],
+  "ciCards": [
+    {
+      "title": "Feature & Bugfix Pipeline",
+      "titleColor": "green", "titleIcon": "✦",
+      "description": "Sadece build + test çalıştırır. Deploy tetiklenmez; yalnızca develop merge'ünde çalışır.",
+      "code": "build:feature:\n  stage: build\n  only:\n    - /^feature\\/.*/\n    - /^bugfix\\/.*/\n  script:\n    - ./gradlew build test\n\ndeploy:\n  stage: deploy\n  only:\n    - develop\n  environment: staging\n  script:\n    - ./deploy.sh staging"
+    },
+    {
+      "title": "Hotfix Pipeline",
+      "titleColor": "red", "titleIcon": "⚡",
+      "description": "Hotfix branch'inde prod deploy tetiklenmez; yalnızca master merge'ünde manuel onay ile çalışır.",
+      "code": "build:hotfix:\n  stage: build\n  only:\n    - /^hotfix\\/.*/\n  script:\n    - ./gradlew build test\n\ndeploy:production:\n  stage: deploy\n  only:\n    - master\n  when: manual\n  environment: production\n  script:\n    - ./deploy.sh production"
+    },
+    {
+      "title": "Otomatik Back-Merge Job",
+      "titleColor": "purple", "titleIcon": "↩",
+      "description": "Hotfix master'a merge olduktan sonra develop'a otomatik MR açar.",
+      "code": "back-merge:to-develop:\n  stage: .post\n  only:\n    - master\n  script:\n    - |\n      curl --request POST \\\n        --header \"PRIVATE-TOKEN: $GL_TOKEN\" \\\n        --data \"source_branch=master&\n                target_branch=develop&\n                title=back-merge\" \\\n        \"$CI_API_V4_URL/projects/\\\n         $CI_PROJECT_ID/merge_requests\""
+    },
+    {
+      "title": "Staging Auto-Deploy",
+      "titleColor": "amber", "titleIcon": "⬡",
+      "description": "develop'a her merge'de staging otomatik güncellenir.",
+      "code": "deploy:staging:\n  stage: deploy\n  only:\n    - develop\n  environment:\n    name: staging\n    url: https://staging.example.com\n  script:\n    - docker build -t app:$CI_COMMIT_SHA .\n    - docker push registry/app:$CI_COMMIT_SHA\n    - kubectl set image \\\n        deploy/app app=registry/app:\\\n        $CI_COMMIT_SHA"
+    }
+  ],
+  "conflictSteps": [
+    {
+      "title": "Hotfix branch'ini lokalde güncel hale getir",
+      "code": "git checkout hotfix/issue-15610\ngit pull origin hotfix/issue-15610"
+    },
+    {
+      "title": "develop'ı hotfix üzerine merge et (conflict'leri görmek için)",
+      "code": "git fetch origin develop\ngit merge origin/develop"
+    },
+    {
+      "title": "Conflict işaretlerini bul ve çöz",
+      "code": "# Conflict olan dosyaları listele\ngit status\n\n# Editörde aç, <<<<<<< / ======= / >>>>>>> bloklarını çöz\ngit add src/payment/PaymentService.java"
+    },
+    {
+      "title": "Merge commit oluştur ve push'la",
+      "code": "git commit -m \"back-merge: master hotfix → develop (conflict resolved)\"\ngit push origin hotfix/issue-15610"
+    },
+    {
+      "title": "GitLab'da develop hedefli MR aç ve merge et",
+      "code": "# GitLab UI → Merge Requests → New Merge Request\n# Source: hotfix/issue-15610\n# Target: develop\n# Title:  [HOTFIX back-merge] Ödeme hatası → develop"
+    }
+  ],
+  "tip": "Branch prefixine göre pipeline davranışını ayarlamak, yanlış deploy riskini sıfıra indirir. Aşağıdaki örnekler <code>.gitlab-ci.yml</code> içine doğrudan eklenebilir.",
+  "warning": "<strong>Dikkat:</strong> Back-merge conflict'i erteleme. develop'ta bozuk kalırsa sonraki feature ve bugfix branch'leri aynı conflict'i miras alır. Hotfix master'a merge olduktan hemen sonra back-merge yapılmalı."
+}
